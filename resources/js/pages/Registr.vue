@@ -42,7 +42,7 @@ export default {
       axios.get('/sanctum/csrf-cookie')
         .then(res => {
           axios.post('/api/register', this.form)
-            .then(res => console.log(res))
+            .then(res => localStorage.setItem('token', res.config.headers['X-XSRF-TOKEN']))
             .catch(err => console.log(err.response))
         })
     }

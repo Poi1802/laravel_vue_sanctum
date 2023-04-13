@@ -8,16 +8,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <RouterLink class="nav-link " aria-current="page" :to="{ name: 'get.index' }">Get</RouterLink>
+          <RouterLink v-if="token" class="nav-link " aria-current="page" :to="{ name: 'get.index' }">Get</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link " aria-current="page" :to="{ name: 'login' }">Login</RouterLink>
+          <RouterLink v-if="!token" class="nav-link " aria-current="page" :to="{ name: 'login' }">Login</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link " aria-current="page" :to="{ name: 'registr' }">Registration</RouterLink>
+          <RouterLink v-if="!token" class="nav-link " aria-current="page" :to="{ name: 'registr' }">Registration
+          </RouterLink>
         </li>
         <li class="nav-item">
-          <a @click.prevent="logout" class="nav-link " aria-current="page" href="">Logout</a>
+          <a v-if="token" @click.prevent="logout" class="nav-link " aria-current="page" href="">Logout</a>
         </li>
       </ul>
     </div>
@@ -28,12 +29,18 @@
 import axios from 'axios';
 
 export default {
+  props: {
+    token: String
+  },
   methods: {
     logout() {
       axios.get('/sanctum/csrf-cookie')
         .then(res => {
           axios.post('/api/logout')
-            .then(res => this.$router.push({ name: 'login' }))
+            .then(res => {
+              localStorage.removeItem('token')
+              this.$router.push({ name: 'login' })
+            })
             .catch(err => console.log(err))
         })
     }

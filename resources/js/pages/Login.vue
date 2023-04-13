@@ -31,7 +31,10 @@ export default {
     login() {
       axios.get('/sanctum/csrf-cookie').then(res => {
         axios.post('/api/login', this.form)
-          .then(res => console.log(res))
+          .then(res => {
+            localStorage.setItem('token', res.config.headers['X-XSRF-TOKEN'])
+            this.$router.push({ name: 'get.index' })
+          })
           .catch(err => console.log(err.response))
       })
     }

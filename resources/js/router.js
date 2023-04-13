@@ -23,4 +23,22 @@ const router = createRouter({
   history: createWebHistory()
 })
 
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+
+  if (!token) {
+    if (to.name === 'login' || to.name === 'registr') {
+      return next();
+    } else {
+      return next({ name: 'login' })
+    }
+  }
+
+  if ((to.name === 'login' || to.name === 'registr') && token) {
+    return next({ name: 'get.index' })
+  }
+
+  next();
+})
+
 export default router;

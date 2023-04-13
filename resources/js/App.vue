@@ -1,5 +1,5 @@
 <template>
-  <Navbar></Navbar>
+  <Navbar :token="token"></Navbar>
   <RouterView :id="$route.fullPath"></RouterView>
 </template>
 
@@ -9,6 +9,12 @@ import Navbar from './components/Navbar.vue';
 export default {
   components: {
     Navbar
+  },
+  data: () => ({
+    token: localStorage.getItem('token')
+  }),
+  updated() {
+    this.token = localStorage.getItem('token')
   }
 }
 </script>
